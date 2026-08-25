@@ -1,0 +1,28 @@
+cat > .gitignore << 'EOF'
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+*.egg-info/
+
+# Environment & secrets
+.env
+
+# Models & data
+*.pkl
+*.onnx
+data/
+models/*.pkl
+
+# Docker
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+EOF
