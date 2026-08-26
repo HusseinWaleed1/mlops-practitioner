@@ -6,8 +6,8 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="PRODML_", env_file=".env", extra="ignore")
 
     # Paths
-    model_path: str = "../models/baseline.pkl"
-    data_path: str = "../data/green_tripdata_2023-01.parquet"
+    model_path: str = "models/baseline.pkl"
+    data_path: str = "data/green_tripdata_2023-01.parquet"
 
     # Model training
     n_estimators: int = 100
