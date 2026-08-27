@@ -1,0 +1,10 @@
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - PRODML_LOG_LEVEL=INFO
+    restart: unless-stopped
