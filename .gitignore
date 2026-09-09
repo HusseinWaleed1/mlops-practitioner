@@ -1,4 +1,3 @@
-cat > .gitignore << 'EOF'
 # Python
 .venv/
 __pycache__/
@@ -7,17 +6,18 @@ __pycache__/
 .coverage
 *.egg-info/
 
-.venv/
 # Environment & secrets
 .env
 
 # Models & data
 *.pkl
 *.onnx
-data/
+data/*
+!data/*.dvc
 models/*.onnx
 models/*.pkl
 models/*.bin
+
 # Docker
 *.log
 
@@ -27,4 +27,4 @@ models/*.bin
 
 # OS
 .DS_Store
-EOF*.onnx
+EOF

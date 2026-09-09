@@ -5,6 +5,7 @@ import numpy as np
 from sklearn.feature_extraction import DictVectorizer
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error
+import mlflow
 
 from mlops_practitioner.config import settings
 from mlops_practitioner.data import load_raw_data, compute_duration, train_val_split
@@ -26,6 +27,8 @@ def timed(func):
 
 @timed
 def train_model() -> dict:
+    mlflow.set_tracking_uri("http://localhost:5000")
+    mlflow.set_experiment("nyc-taxi-duration")
     df = load_raw_data()
     df = compute_duration(df)
     df = add_features(df)
@@ -39,23 +42,35 @@ def train_model() -> dict:
     y_train = df_train["duration"].values
     y_val = df_val["duration"].values
 
-    model = RandomForestRegressor(
-        n_estimators=settings.n_estimators,
-        max_depth=settings.max_depth,
-        random_state=settings.random_state,
-        n_jobs=-1,
-    )
-    model.fit(X_train, y_train)
+    params = {
+        "n_estimators": settings.n_estimators,
+        "max_depth": settings.max_depth,
+        "random_state": settings.random_state,
+        "n_jobs": -1
+    }
 
-    y_pred = model.predict(X_val)
-    mae = mean_absolute_error(y_val, y_pred)
-    rmse = np.sqrt(mean_squared_error(y_val, y_pred))
+    with mlflow.start_run(run_name="random_forest_baseline"):
+        mlflow.log_params(params)
 
-    logger.info(f"MAE={mae:.3f} RMSE={rmse:.3f}")
+        model = RandomForestRegressor(**params)
+        model.fit(X_train, y_train)
 
-    with open(settings.model_path, "wb") as f_out:
-        pickle.dump((dv, model), f_out)
-    logger.info(f"Model saved to {settings.model_path}")
+        y_pred = model.predict(X_val)
+        mae = mean_absolute_error(y_val, y_pred)
+        rmse = np.sqrt(mean_squared_error(y_val, y_pred))
+
+        mlflow.log_metric("mae", mae)
+        mlflow.log_metric("rmse", rmse)
+
+        logger.info(f"MAE={mae:.3f} RMSE={rmse:.3f}")
+
+        with open(settings.model_path, "wb") as f_out:
+            pickle.dump((dv, model), f_out)
+        logger.info(f"Model saved to {settings.model_path}")
+        mlflow.sklearn.log_model(model,
+                                  artifact_path="model",registered_model_name="RandomForestModel")
+
+        
 
     return {"mae": mae, "rmse": rmse}
 

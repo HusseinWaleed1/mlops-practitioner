@@ -43,3 +43,11 @@ reports/                  # module reports and metrics
 ## Model
 
 RandomForestRegressor trained on NYC Green Taxi trip data (Jan 2023), predicting trip duration in minutes from pickup/dropoff location pair and trip distance.
+
+# Check Train Output and Mlflow Result
+
+uv run python -m mlops_practitioner.train
+
+ uv run mlflow ui
+
+open_this_link_one_prowser:http://127.0.0.1:5000

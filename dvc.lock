@@ -1,0 +1,37 @@
+schema: '2.0'
+stages:
+  train:
+    cmd: python -m mlops_practitioner.train
+    deps:
+    - path: data/green_tripdata_2023-01.parquet
+      hash: md5
+      md5: 4ddd13febe8dfe9e32c41c26175a5115
+      size: 1427002
+    - path: src/mlops_practitioner/config.py
+      hash: md5
+      md5: 362f7ccd5a19a46b84bd8ec96ffb0994
+      size: 1714
+    - path: src/mlops_practitioner/data.py
+      hash: md5
+      md5: 19879989e2b77eed8e4ebb44ffc589f0
+      size: 1464
+    - path: src/mlops_practitioner/features.py
+      hash: md5
+      md5: 279ce049fb3af3de7ce95c129ca02b86
+      size: 581
+    - path: src/mlops_practitioner/train.py
+      hash: md5
+      md5: c38339d8b4fcebc8e4d06600215b102f
+      size: 2487
+    params:
+      params.yaml:
+        max_depth: 10
+        max_duration_minutes: 60.0
+        min_duration_minutes: 1.0
+        n_estimators: 100
+        train_split_ratio: 0.8
+    outs:
+    - path: models/baseline.pkl
+      hash: md5
+      md5: ce37020cec358063e7dea5c74ac24012
+      size: 4355131
