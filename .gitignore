@@ -14,7 +14,8 @@ __pycache__/
 # Models & data
 *.pkl
 *.onnx
-data/
+data/*
+!data/*.dvc
 models/*.onnx
 models/*.pkl
 models/*.bin
