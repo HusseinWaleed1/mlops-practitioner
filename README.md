@@ -4,14 +4,11 @@ A production-ready ML service predicting NYC green taxi trip duration, built as 
 
 ## Quick Start (3 commands)
 
-\`\`\`bash
+```bash
 docker pull husseinwaleed/mlops-practitioner-api:latest
-
 docker run -p 8000:8000 husseinwaleed/mlops-practitioner-api:latest
-
 curl -X POST http://localhost:8000/predict -H "Content-Type: application/json" -d '{"PU_DO": "43_151", "trip_distance": 2.5}'
-
-\`\`\`
+```
 
 ## API Endpoints
 
