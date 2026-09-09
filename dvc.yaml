@@ -1,0 +1,18 @@
+stages:
+  train:
+    cmd: python -m mlops_practitioner.train
+    deps:
+      - src/mlops_practitioner/train.py
+      - src/mlops_practitioner/data.py
+      - src/mlops_practitioner/features.py
+      - src/mlops_practitioner/config.py
+      - data/green_tripdata_2023-01.parquet
+    params:
+      - params.yaml:
+          - n_estimators
+          - max_depth
+          - train_split_ratio
+          - min_duration_minutes
+          - max_duration_minutes
+    outs:
+      - models/baseline.pkl
