@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     data_path: str = "data/green_tripdata_2023-01.parquet"
 
     # Model training
+    
     n_estimators: int = 100
     max_depth: int = 10
     random_state: int = 42
