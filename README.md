@@ -4,11 +4,11 @@ A production-ready ML service predicting NYC green taxi trip duration, built as 
 
 ## Quick Start (3 commands)
 
-\`\`\`bash
+```bash
 docker pull husseinwaleed/mlops-practitioner-api:latest
 docker run -p 8000:8000 husseinwaleed/mlops-practitioner-api:latest
 curl -X POST http://localhost:8000/predict -H "Content-Type: application/json" -d '{"PU_DO": "43_151", "trip_distance": 2.5}'
-\`\`\`
+```
 
 ## API Endpoints
 
@@ -23,31 +23,32 @@ Interactive docs available at `http://localhost:8000/docs` once running.
 
 ## Local Development
 
-\`\`\`bash
+```bash
 uv sync --extra dev
 uv run python -m mlops_practitioner.train      # train the model
 uv run uvicorn mlops_practitioner.api.main:app --reload  # run the API
 uv run pytest -v                                # run tests
-\`\`\`
+```
 
 ## Project Structure
 
-\`\`\`
+```
 src/mlops_practitioner/   # core package (data, features, train, predict, export, api)
 tests/                    # test suite (70%+ coverage)
 docker/                   # Dockerfile and docker-compose
 notebooks/                # exploratory baseline notebook
 reports/                  # module reports and metrics
-\`\`\`
+```
 
 ## Model
 
 RandomForestRegressor trained on NYC Green Taxi trip data (Jan 2023), predicting trip duration in minutes from pickup/dropoff location pair and trip distance.
 
-# Check Train Output and Mlflow Result
+## Check Train Output and MLflow Result
 
+```bash
 uv run python -m mlops_practitioner.train
+uv run mlflow ui
+```
 
- uv run mlflow ui
-
-open_this_link_one_prowser:http://127.0.0.1:5000
+Open this link in your browser: http://127.0.0.1:5000
