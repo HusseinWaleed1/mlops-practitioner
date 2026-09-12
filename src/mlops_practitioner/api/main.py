@@ -1,9 +1,8 @@
 """FastAPI application exposing the duration prediction model."""
 import uuid
 from contextlib import asynccontextmanager
-from contextvars import ContextVar
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Depends
 from fastapi.responses import JSONResponse
 
 from mlops_practitioner.config import settings
@@ -35,6 +34,13 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="Trip Duration Predictor", lifespan=lifespan)
+
+
+def get_predictor() -> DurationPredictor:
+    """Dependency provider. Tests override this via app.dependency_overrides."""
+    if predictor is None:
+        raise RuntimeError("Model not loaded")
+    return predictor
 
 
 @app.middleware("http")
@@ -71,15 +77,21 @@ async def metadata():
 
 
 @app.post("/predict", response_model=PredictionResponse)
-async def predict(request: PredictionRequest):
+async def predict(
+    request: PredictionRequest,
+    model: DurationPredictor = Depends(get_predictor),
+):
     logger.info(f"Predicting for PU_DO={request.PU_DO} distance={request.trip_distance}")
-    pred = predictor.predict_one(request.model_dump())
+    pred = model.predict_one(request.model_dump())
     return PredictionResponse(predicted_duration_minutes=pred)
 
 
 @app.post("/predict/batch", response_model=BatchPredictionResponse)
-async def predict_batch(request: BatchPredictionRequest):
+async def predict_batch(
+    request: BatchPredictionRequest,
+    model: DurationPredictor = Depends(get_predictor),
+):
     logger.info(f"Batch predicting {len(request.trips)} trips")
     dicts = [t.model_dump() for t in request.trips]
-    preds = predictor.predict_batch(dicts)
+    preds = model.predict_batch(dicts)
     return BatchPredictionResponse(predictions=preds)
